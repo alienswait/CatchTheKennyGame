@@ -11,6 +11,9 @@ class ViewController: UIViewController {
 
     
     var score = 0
+    var timer = Timer()
+    var counter = 0
+    
     
     
     @IBOutlet weak var timeLabel: UILabel!
@@ -46,6 +49,7 @@ class ViewController: UIViewController {
         kenny9.isUserInteractionEnabled = true
 
         
+        //Images
         let recognizer1 = UITapGestureRecognizer(target: self, action: #selector(increaseScore))
         let recognizer2 = UITapGestureRecognizer(target: self, action: #selector(increaseScore))
         let recognizer3 = UITapGestureRecognizer(target: self, action: #selector(increaseScore))
@@ -65,6 +69,12 @@ class ViewController: UIViewController {
         kenny7.addGestureRecognizer(recognizer7)
         kenny8.addGestureRecognizer(recognizer8)
         kenny9.addGestureRecognizer(recognizer9)
+        
+        counter = 10
+        timeLabel.text = String(counter)
+        
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(countDown), userInfo: nil, repeats: true)
+        
 
         
     }
@@ -74,6 +84,37 @@ class ViewController: UIViewController {
         
         score += 1
         scoreLabel.text = "Score: \(score)"
+        
+    }
+    
+    @objc func countDown(){
+        
+        counter -= 1
+        timeLabel.text = String(counter)
+        
+        if counter == 0 {
+            
+            timer.invalidate()
+            
+            
+            //Alert
+            
+            let alert = UIAlertController(title: "Times Up", message: "Do you want to play again?", preferredStyle: UIAlertController.Style.alert)
+            
+            
+            let okButton = UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel, handler: nil)
+            
+            let replayButton = UIAlertAction(title: "Replay", style: UIAlertAction.Style.default, handler: { UIAlertAction in
+                //Replay function
+            })
+            
+            alert.addAction(okButton)
+            alert.addAction(replayButton)
+            self.present(alert, animated: true, completion: nil)
+            
+            
+            
+        }
         
     }
 
