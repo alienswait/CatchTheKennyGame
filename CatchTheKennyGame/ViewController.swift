@@ -14,6 +14,7 @@ class ViewController: UIViewController {
     var timer = Timer()
     var counter = 0
     var hideTimer = Timer()
+    var highScore = 0
     
     var kennyArray = [UIImageView]()
     
@@ -38,6 +39,21 @@ class ViewController: UIViewController {
             
         scoreLabel.text = "Score: \(score)"
         
+        
+        //Highscore check
+        
+        let storedHighScore = UserDefaults.standard.object(forKey: "highscore")
+        
+        if storedHighScore == nil{
+            highScore = 0
+            highscoreLabel.text = "Highscore: \(highScore)"
+        }
+        
+        if let newScore = storedHighScore as? Int{
+            highScore = newScore
+            highscoreLabel.text = "Highscore: \(highScore)" 
+        }
+            
         
         
         //Enables users to click "kenny"
@@ -122,6 +138,16 @@ class ViewController: UIViewController {
                 kenny.isHidden = true
             }
             
+            //Highscore
+            
+            if self.score > self.highScore{
+                self.highScore = self.score
+                highscoreLabel.text = "Highscore: \(self.highScore)"
+                UserDefaults.standard.set(self.highScore, forKey: "highscore")
+                
+            }
+            
+            
             //Alert
             
             let alert = UIAlertController(title: "Times Up", message: "Do you want to play again?", preferredStyle: UIAlertController.Style.alert)
@@ -131,6 +157,18 @@ class ViewController: UIViewController {
             
             let replayButton = UIAlertAction(title: "Replay", style: UIAlertAction.Style.default, handler: { UIAlertAction in
                 //Replay function
+                
+                self.score = 0
+                self.scoreLabel.text = "Score: \(self.score)"
+                self.counter = 10
+                self.timeLabel.text = String(self.counter)
+                
+                self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.countDown), userInfo: nil, repeats: true)
+                
+                self.hideTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.hideKenny), userInfo: nil, repeats: true)
+                
+                
+                
             })
             
             alert.addAction(okButton)
